@@ -1,0 +1,44 @@
+{
+  "name": "pins-channel-bots",
+  "version": "0.0.1",
+  "description": "Discord bot that maintains a \"pins\" or \"best-of\" channel.",
+  "type": "module",
+  "engines": {
+    "node": ">= 16.13 <17"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^3.2.0",
+    "@types/node": "~16.11",
+    "@typescript-eslint/eslint-plugin": "~5.14",
+    "@typescript-eslint/parser": "~5.14",
+    "eslint": "~8.11",
+    "eslint-config-prettier": "~8.5",
+    "prettier": "~2.5",
+    "rimraf": "~3.0",
+    "tsutils": "~3.21",
+    "typescript": "~4.6"
+  },
+  "scripts": {
+    "start": "node build/main.js",
+    "clean": "rimraf build tmp",
+    "prebuild": "npm run lint",
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -w -p tsconfig.json",
+    "build:release": "npm run clean && tsc -p tsconfig.release.json",
+    "lint": "eslint . --ext .ts",
+    "prettier": "prettier --config \".prettierrc\" --ignore-path \".prettierignore\" -l  --write \"**/*.{json,ts}\""
+  },
+  "author": "Mario Muñiz <mario@users.noreply.github.com>",
+  "dependencies": {
+    "@discordjs/rest": "^0.5.0",
+    "discord-api-types": "^0.36.0",
+    "discord.js": "^13.8.1",
+    "dotenv": "^16.0.0",
+    "emoji-regex": "^10.1.0",
+    "firebase-admin": "^10.1.0",
+    "tslib": "~2.3.1"
+  },
+  "volta": {
+    "node": "16.14.2"
+  }
+}
