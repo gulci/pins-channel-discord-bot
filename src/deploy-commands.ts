@@ -12,8 +12,11 @@ if (process.env.NODE_ENV !== 'production') {
     `Registering guild application commands for ${process.env.DEVELOPMENT_GUILD_ID}:`,
   )
 
-  if (typeof process.env.DEVELOPMENT_GUILD_ID !== 'string')
-    throw new Error('DEVELOPMENT_GUILD_ID must be set.')
+  if (typeof process.env.DEVELOPMENT_GUILD_ID !== 'string') {
+    console.log('a DEVELOPMENT_GUILD_ID must be set')
+    process.exit()
+  }
+
   rest
     .put(
       Routes.applicationGuildCommands(
