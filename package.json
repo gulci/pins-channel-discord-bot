@@ -1,5 +1,5 @@
 {
-  "name": "pins-channel-bots",
+  "name": "pins-channel-discord-bot",
   "version": "0.0.1",
   "description": "Discord bot that maintains a \"pins\" or \"best-of\" channel.",
   "type": "module",
