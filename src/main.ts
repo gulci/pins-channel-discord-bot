@@ -2,7 +2,7 @@ import { Collection } from 'discord.js'
 import 'dotenv/config'
 
 import settings from './commands/settings/index.js'
-// import './deploy-commands.js'
+import './deploy-commands.js'
 import { handleReactionAdd } from './handlers/index.js'
 import { client } from './utils/discord/clients.js'
 
