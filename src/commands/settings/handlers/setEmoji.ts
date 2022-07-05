@@ -12,11 +12,10 @@ function discordEmojiRegex() {
 }
 
 export default async function setThreshold(interaction: CommandInteraction) {
-  if (!interaction.guild)
-    throw new Error('This command must be run in a guild.')
+  if (!interaction.guild) throw new Error('command must be run in a guild.')
 
   const rawEmojiString = interaction.options.getString('emoji')
-  if (!rawEmojiString) throw new Error('An emoji must be specified.')
+  if (!rawEmojiString) throw new Error('emoji must be specified.')
 
   const emojiMatches = Array.from(rawEmojiString.matchAll(discordEmojiRegex()))
   if (emojiMatches.length > 1) {
@@ -29,7 +28,7 @@ export default async function setThreshold(interaction: CommandInteraction) {
 
   const parsedEmojiString = discordEmojiRegex().exec(rawEmojiString)
 
-  if (!parsedEmojiString) throw new Error('Could not parse emoji')
+  if (!parsedEmojiString) throw new Error('could not parse emoji')
 
   let emojiId
 

@@ -65,7 +65,7 @@ const settingsCommand: Command = {
     ),
   async execute(interaction) {
     if (!interaction.inGuild())
-      throw new Error('Command must be run in a guild.')
+      throw new Error('command must be run in a guild.')
 
     if (interaction.options.getSubcommandGroup(false)) {
       switch (interaction.options.getSubcommandGroup()) {

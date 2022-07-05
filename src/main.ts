@@ -1,24 +1,10 @@
-import { ClientOptions, Collection, Intents } from 'discord.js'
+import { Collection } from 'discord.js'
 import 'dotenv/config'
 
 import settings from './commands/settings/index.js'
-import './deploy-commands.js'
-import Client from './utils/discord/Client.js'
-
-const clientOptions: ClientOptions = {
-  intents: [Intents.FLAGS.GUILDS],
-}
-
-if (process.env.NODE_ENV === 'production') {
-  clientOptions.sweepers = {
-    messages: {
-      interval: 43200,
-      lifetime: 21600,
-    },
-  }
-}
-
-const client = new Client(clientOptions)
+// import './deploy-commands.js'
+import { handleReactionAdd } from './handlers/index.js'
+import { client } from './utils/discord/clients.js'
 
 client.commands = new Collection()
 client.commands.set(settings.data.name, settings)
@@ -40,5 +26,7 @@ client.on('interactionCreate', async (interaction) => {
     }
   }
 })
+
+client.on('messageReactionAdd', handleReactionAdd)
 
 client.login(process.env.BOT_TOKEN)
