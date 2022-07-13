@@ -12,13 +12,13 @@ export async function isMessagePinned(message: Message | PartialMessage) {
   )
 
   if (cachedPinnedMessageId === undefined) {
-    const pinnedMessageDoc = await db
+    const pinnedMessageDocs = await db
       .collection(message.guildId)
       .doc('data')
       .collection('pinned_messages')
-      .doc(message.id)
+      .where('message_id', '==', message.id)
       .get()
-    if (!pinnedMessageDoc.exists) return false
+    if (pinnedMessageDocs.empty) return false
     pinnedMessageIdsCache.set<boolean>(message.id, true)
   }
 
@@ -28,10 +28,8 @@ export async function isMessagePinned(message: Message | PartialMessage) {
 export async function setPinnedMessage(message: Message) {
   if (!message.guildId) throw new Error('guild id not found')
 
-  const pinnedMessageDoc = db
-    .collection(message.guildId)
-    .doc('data')
-    .collection('pinned_messages')
-    .doc(message.id)
-  await pinnedMessageDoc.set({ pinned_at: FieldValue.serverTimestamp() })
+  db.collection(message.guildId).doc('data').collection('pinned_messages').add({
+    message_id: message.id,
+    pinned_at: FieldValue.serverTimestamp(),
+  })
 }
