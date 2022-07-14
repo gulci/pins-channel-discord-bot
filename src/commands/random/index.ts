@@ -2,8 +2,8 @@ import { SlashCommandBuilder } from '@discordjs/builders'
 import { autoId } from '@google-cloud/firestore/build/src/util.js'
 import { Snowflake } from 'discord.js'
 
-import { constructPinMessageEmbed } from '../../handlers/pins/pinThresholdMet.js'
 import { Command } from '../../types/commands'
+import { constructPinMessageEmbed } from '../../utils/discord/messages.js'
 import { db } from '../../utils/firebase/clients.js'
 
 async function getRandomPinnedMessageData(guildId: Snowflake) {
@@ -52,7 +52,7 @@ const randomCommand: Command = {
       }
     }
     if (!pinnedMessage) throw new Error('no message found')
-    const pinMessageEmbed = constructPinMessageEmbed(pinnedMessage)
+    const pinMessageEmbed = constructPinMessageEmbed(pinnedMessage, true)
     await interaction.reply({ embeds: [pinMessageEmbed] })
   },
 }
