@@ -1,11 +1,12 @@
 import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9'
 
+import random from './commands/random/index.js'
 import settings from './commands/settings/index.js'
 
 const rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN)
 
-const commands = [settings.data.toJSON()]
+const commands = [settings.data.toJSON(), random.data.toJSON()]
 
 if (process.env.NODE_ENV !== 'production') {
   console.log(
