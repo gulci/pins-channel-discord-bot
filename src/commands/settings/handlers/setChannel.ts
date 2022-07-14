@@ -16,6 +16,5 @@ export default async function setChannel(interaction: CommandInteraction) {
   )
   await interaction.reply({
     content: `The pins channel has been set to <#${channel.id}>.`,
-    ephemeral: true,
   })
 }

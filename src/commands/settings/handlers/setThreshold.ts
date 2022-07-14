@@ -16,6 +16,5 @@ export default async function setThreshold(interaction: CommandInteraction) {
   )
   await interaction.reply({
     content: `The pinning threshold has been set to ${threshold} react(s).`,
-    ephemeral: true,
   })
 }

@@ -59,6 +59,5 @@ export default async function setThreshold(interaction: CommandInteraction) {
         ? await interaction.guild.emojis.fetch(emojiId)
         : rawEmojiString
     }`,
-    ephemeral: true,
   })
 }
