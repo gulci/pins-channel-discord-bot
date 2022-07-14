@@ -56,6 +56,21 @@ const randomCommand: Command = {
             )
             if (message.id === pinnedMessageData.message_id)
               pinnedMessage = message
+            // Fix up old messages that don't have channel_id set
+            if (message.guild) {
+              const query = await db
+                .collection(message.guild.id)
+                .doc('data')
+                .collection('pinned_messages')
+                .where('message_id', '==', message.id)
+                .limit(1)
+              const queryResults = await query.get()
+              if (!queryResults.empty) {
+                queryResults.docs[0].ref.update({
+                  channel_id: message.channel.id,
+                })
+              }
+            }
           } catch (error) {
             continue
           }
