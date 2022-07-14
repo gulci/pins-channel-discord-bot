@@ -1,6 +1,7 @@
 import { Collection } from 'discord.js'
 import 'dotenv/config'
 
+import random from './commands/random/index.js'
 import settings from './commands/settings/index.js'
 import './deploy-commands.js'
 import { handleReactionAdd } from './handlers/index.js'
@@ -8,6 +9,7 @@ import { client } from './utils/discord/clients.js'
 
 client.commands = new Collection()
 client.commands.set(settings.data.name, settings)
+client.commands.set(random.data.name, random)
 
 client.on('interactionCreate', async (interaction) => {
   if (interaction.isCommand()) {

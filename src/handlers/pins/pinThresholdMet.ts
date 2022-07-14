@@ -4,16 +4,7 @@ import { isMessagePinned, setPinnedMessage } from '../../db/pins/index.js'
 import { getGuildSettings } from '../../db/settings/index.js'
 import { GuildSettings } from '../../types/settings.js'
 
-export default async function pinThresholdMet(
-  message: Message | PartialMessage,
-) {
-  if (message.partial) throw new Error('message is a partial')
-  if (!message.guildId || (await isMessagePinned(message))) return
-
-  postPinMessage(message)
-}
-
-async function postPinMessage(message: Message | PartialMessage) {
+export function constructPinMessageEmbed(message: Message | PartialMessage) {
   if (message.partial) throw new Error('message is a partial')
   if (!message.guild) throw new Error('message must be in a guild')
 
@@ -41,19 +32,20 @@ async function postPinMessage(message: Message | PartialMessage) {
         if (embed.image) return embed.image.url
         return
       })
-    // TODO: Figure out how to make this and surrounding code TS-friendly
-    if (!imgs[0]) throw new Error('this should not happen')
-    messageData.imageURL = imgs[0]
 
-    // site specific gif fixes
-    messageData.imageURL = messageData.imageURL.replace(
-      /(^https:\/\/media.tenor.com\/.*)(AAAAD\/)(.*)(\.png|\.jpg)/,
-      '$1AAAAC/$3.gif',
-    )
-    messageData.imageURL = messageData.imageURL.replace(
-      /(^https:\/\/thumbs.gfycat.com\/.*-)(poster\.jpg)/,
-      '$1size_restricted.gif',
-    )
+    if (imgs[0]) {
+      messageData.imageURL = imgs[0]
+
+      // site specific gif fixes
+      messageData.imageURL = messageData.imageURL.replace(
+        /(^https:\/\/media.tenor.com\/.*)(AAAAD\/)(.*)(\.png|\.jpg)/,
+        '$1AAAAC/$3.gif',
+      )
+      messageData.imageURL = messageData.imageURL.replace(
+        /(^https:\/\/thumbs.gfycat.com\/.*-)(poster\.jpg)/,
+        '$1size_restricted.gif',
+      )
+    }
 
     // twitch clip check
     const videoEmbed = message.embeds.filter((embed) => embed.video)[0]
@@ -77,7 +69,7 @@ async function postPinMessage(message: Message | PartialMessage) {
     messageData.content += `\n📎 [${firstAttachment.name}](${firstAttachment.proxyURL})`
   }
 
-  const embed = new MessageEmbed()
+  return new MessageEmbed()
     .setAuthor({
       name: message.author.username,
       iconURL: messageData.avatarURL,
@@ -86,13 +78,22 @@ async function postPinMessage(message: Message | PartialMessage) {
     .setDescription(messageData.content)
     .setImage(messageData.imageURL)
     .setTimestamp(new Date())
+}
 
+export default async function pinThresholdMet(
+  message: Message | PartialMessage,
+) {
+  if (message.partial) throw new Error('message is a partial')
+  if (!message.guild) throw new Error('message must be in a guild')
+  if (!message.guildId || (await isMessagePinned(message))) return
+
+  const pinMessageEmbed = constructPinMessageEmbed(message)
   const pinChannel = message.guild.channels.cache.get(
     ((await getGuildSettings(message.guild.id)) as GuildSettings).pin_channel,
   )
   if (!pinChannel) throw new Error('could not fetch pin channel')
   if (!pinChannel.isText()) throw new Error('channel is not text channel')
-  pinChannel.send({ embeds: [embed] })
+  pinChannel.send({ embeds: [pinMessageEmbed] })
 
   setPinnedMessage(message)
 }
