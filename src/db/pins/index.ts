@@ -29,6 +29,7 @@ export async function setPinnedMessage(message: Message) {
   if (!message.guildId) throw new Error('guild id not found')
 
   db.collection(message.guildId).doc('data').collection('pinned_messages').add({
+    channel_id: message.channelId,
     message_id: message.id,
     pinned_at: FieldValue.serverTimestamp(),
   })

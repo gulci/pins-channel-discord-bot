@@ -37,17 +37,28 @@ const randomCommand: Command = {
     const pinnedMessageData = await getRandomPinnedMessageData(
       interaction.guild.id,
     )
-    const channels = await interaction.guild.channels.fetch()
-    for (const channelTuple of channels) {
-      if (!pinnedMessage && channelTuple[1].isText()) {
-        try {
-          const message = await channelTuple[1].messages.fetch(
-            pinnedMessageData.message_id,
-          )
-          if (message.id === pinnedMessageData.message_id)
-            pinnedMessage = message
-        } catch (error) {
-          continue
+    if (pinnedMessageData.channel_id) {
+      const channel = await interaction.guild.channels.fetch(
+        pinnedMessageData.channel_id,
+      )
+      if (channel && channel.isText()) {
+        pinnedMessage = await channel.messages.fetch(
+          pinnedMessageData.message_id,
+        )
+      }
+    } else {
+      const channels = await interaction.guild.channels.fetch()
+      for (const channelTuple of channels) {
+        if (!pinnedMessage && channelTuple[1].isText()) {
+          try {
+            const message = await channelTuple[1].messages.fetch(
+              pinnedMessageData.message_id,
+            )
+            if (message.id === pinnedMessageData.message_id)
+              pinnedMessage = message
+          } catch (error) {
+            continue
+          }
         }
       }
     }
