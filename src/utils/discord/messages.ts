@@ -1,9 +1,6 @@
 import { Message, MessageEmbed, PartialMessage } from 'discord.js'
 
-export function constructPinMessageEmbed(
-  message: Message | PartialMessage,
-  useOriginalTimestamp = false,
-) {
+export function constructPinMessageEmbed(message: Message | PartialMessage) {
   if (message.partial) throw new Error('message is a partial')
   if (!message.guild) throw new Error('message must be in a guild')
 
@@ -76,5 +73,5 @@ export function constructPinMessageEmbed(
     })
     .setDescription(messageData.content)
     .setImage(messageData.imageURL)
-    .setTimestamp(useOriginalTimestamp ? message.createdTimestamp : new Date())
+    .setTimestamp(message.createdTimestamp)
 }

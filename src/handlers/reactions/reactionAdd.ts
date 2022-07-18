@@ -22,8 +22,10 @@ export default async function reactionAdd(
   )) as GuildSettings
 
   if (
+    !reaction.message.author ||
+    !reaction.client.user ||
     reaction.count === null ||
-    reaction.message.channelId === settings.pin_channel ||
+    reaction.message.author.id === reaction.client.user.id ||
     (reaction.emoji.id ? reaction.emoji.id : reaction.emoji.name) !==
       settings.emoji_id
   )

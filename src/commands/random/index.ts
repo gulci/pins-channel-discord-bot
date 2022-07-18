@@ -78,7 +78,7 @@ const randomCommand: Command = {
       }
     }
     if (!pinnedMessage) throw new Error('no message found')
-    const pinMessageEmbed = constructPinMessageEmbed(pinnedMessage, true)
+    const pinMessageEmbed = constructPinMessageEmbed(pinnedMessage)
     await interaction.reply({ embeds: [pinMessageEmbed] })
   },
 }
