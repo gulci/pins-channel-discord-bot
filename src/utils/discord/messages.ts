@@ -29,7 +29,10 @@ export function constructPinMessageEmbed(message: Message | PartialMessage) {
         return
       })
 
-    if (imgs[0]) {
+    if (
+      imgs[0] &&
+      message.attachments.first()?.name?.substring(0, 8) !== 'SPOILER_'
+    ) {
       messageData.imageURL = imgs[0]
 
       // site specific gif fixes
@@ -59,10 +62,12 @@ export function constructPinMessageEmbed(message: Message | PartialMessage) {
     }
   } else if (message.attachments.size) {
     const firstAttachment = message.attachments.first()
-    // Figure out how to make this and surrounding code TS-friendly
+    // TODO: Figure out how to make this and surrounding code TS-friendly
     if (firstAttachment === undefined) throw new Error('this should not happen')
-    messageData.imageURL = firstAttachment.url
-    messageData.content += `\n📎 [${firstAttachment.name}](${firstAttachment.proxyURL})`
+    let name = firstAttachment.name
+    if (name?.substring(0, 8) === 'SPOILER_') name = '🚫 SPOILERS 🚫'
+    else messageData.imageURL = firstAttachment.url
+    messageData.content += `\n📎 [${name}](${firstAttachment.proxyURL})`
   }
 
   return new MessageEmbed()
