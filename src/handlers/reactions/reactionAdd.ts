@@ -31,7 +31,7 @@ export default async function reactionAdd(
   )
     return
 
-  if (reaction.count >= settings.pin_threshold) {
+  if (reaction.count == settings.pin_threshold) {
     handlePinThresholdMet(reaction.message)
   }
 }
